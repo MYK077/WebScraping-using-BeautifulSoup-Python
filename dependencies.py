@@ -1,0 +1,57 @@
+# pip install BeautifulSoup4
+# pip install request
+#
+# what is parser ?
+# Along with BeautifulSoup we need to install a parser to parse our HTML. Most of the time we can use any parser as long as we are dealing with good HTML. Here we will be using lxml parser.
+#
+# what is a module?
+#  Simply, a module is a file consisting of Python code. A module can define functions, classes and variables. A module can also include runnable code.
+#
+#  import requests
+#
+#  def get_page_url(url):
+#      response = requests.get(url)
+#      print(response)
+#
+# so in above code if the url is right you get response.ok as True
+# and response.status_code as 200
+
+## below is an example code to get a hang of the functionality
+
+from bs4 import BeautifulSoup
+import requests
+import csv
+
+source = requests.get('http://coreyms.com').text
+
+soup = BeautifulSoup(source, 'lxml')
+
+csv_file = open('cms_scrape.csv', 'w')
+
+csv_writer = csv.writer(csv_file)
+csv_writer.writerow(['headline', 'summary', 'video_link'])
+
+for article in soup.find_all('article'):
+  headline = article.h2.a.text
+  print(headline)
+
+    summary = article.find('div', class_='entry-content').p.text
+  print(summary)
+
+  try:
+      vid_src = article.find('iframe', class_='youtube-player')['src']
+
+      vid_id = vid_src.split('/')[4]
+      vid_id = vid_id.split('?')[0]
+
+      yt_link = f'https://youtube.com/watch?v={vid_id}'
+  except Exception as e:
+      yt_link = None
+
+  print(yt_link)
+
+  print()
+
+  csv_writer.writerow([headline, summary, yt_link])
+
+csv_file.close()
