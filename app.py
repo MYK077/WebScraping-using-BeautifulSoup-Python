@@ -19,9 +19,12 @@ def get_page_url(url):
         soup = BeautifulSoup(response,'lxml')
         title = soup.find('h1',id='itemTitle').get_text(strip= True)
         print(title)
-        # strip() removes space at the begining and end of the string
+        # strip() removes space at the begining and end of the string and split splits the string at space
         price = soup.find('span',id='prcIsum').text.strip().split(' ')
         print(price)
+
+        itemsSold = soup.find('div',class_='w2b-cnt w2b-3 w2b-brdr').text
+        print(itemsSold)
 
 def main():
     url = "https://www.ebay.com/itm/New-Cool-Digital-Watch-for-Kids-Boys-Girls-Slap-on-Teen-Children-Cute-Presents/292908907519?hash=item4432bb3bff:m:m8o9L0QKf8IblKOhyw9mj5w:sc:USPSFirstClass!84102!US!-1"
