@@ -6,7 +6,7 @@
 # import request so that you can use get() method to get the url
 
 from bs4 import BeautifulSoup
-import requests
+import requests,csv
 
 
 def get_page_url(url):
@@ -31,6 +31,8 @@ def get_page_url(url):
 
 
 def get_details(url):
+    csv_file = open('ebay_wrist_watch_data.csv', 'a')
+    csv_writer = csv.writer(csv_file)
     for item in url:
         response = requests.get(item).text
         if not response:
@@ -56,23 +58,26 @@ def get_details(url):
             data ={
             'itemTitle': title,
             'price': price,
-            'currency': currency,
             'total':itemsSold
             }
-    return data
+
+            rows = [data['itemTitle'],data['price'],data['total']]
+            csv_writer.writerow(rows)
+    return 
+
 
 
 def main():
     num = 1
     url = "https://www.ebay.com/b/Wristwatches/31387/bn_2408451?rt=nc&_pgn="
+
     for num in range(1,51):
         get_details(get_page_url(url))
         num = num + 1
         url = url+str(num)
 
-csv_writer = csv.writer(csv_file)
-rows = [data['title'],data['price'],data['currency'],data['total']]
-csv_writer.writerow(rows)
+
+
     # return get_details(get_page_url(url))
     # return get_page_url(url)
 
